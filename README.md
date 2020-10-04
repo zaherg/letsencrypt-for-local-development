@@ -5,8 +5,8 @@ This is an example of a solution I've used in various forms for months for local
 ## Why would you want this?
 
 - You want to use TLS locally in HTTP development
-- You would like a single proxy app to all of your containers (microservices, etc.) on 80/443
-- You'd like to use domain names for all your compose services, like https://api.domain.dev without touching /etc/hosts
+- You would like a single proxy app to all of your containers (microservices, etc.) on `80/443`
+- You'd like to use domain names for all your compose services, like https://api.domain.dev without touching `/etc/hosts`
 - You'd like a trusted certificate in your browsers for local dev and test of any app hostname (api, www, blog, etc.)
 - You'd like this to all happen consistanly across all your dev projects
 
@@ -18,12 +18,12 @@ Inspired by Bret Fisher [project][]
 1. Docker
 2. Docker Compose
 3. Domain Name
-4. Digital Ocean account [referral link][]]
+4. Digital Ocean account [referral link][]
 
 ## Overall Steps to Implement
 
 1. Decide which [DNS provider][] you want to use, for me I use [Digital Ocean][]
-2. Add two DNS records to your domain name DNS record, which points to your computer IP.
+2. Add two DNS records to your domain name DNS record, which points to your computer IP, like : `*.domain.dev 192.168.1.10 / domain.dev 192.168.1.10`.
 3. Create a new environment file called `.env` which should be a copy from `.env.example` and update the values based on your project.
 
 If you want to run the example, make sure to have an environment file called `.env.minio` which should be a copy from `.env.minio.example`
