@@ -8,50 +8,46 @@ services:
       # required permissions
       VOLUMES: 1
       NETWORKS: 1
+      CONTAINERS: 1
+      TASKS: 1
       POST: 1
       DELETE: 1
-      CONTAINERS: 1
       LOG_LEVEL: debug
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock:ro'
     networks:
-      - traefik   
+      - traefik     
 
   proxy:
     image: traefik:v2.3
     command:
       - "--accesslog=true"
-
       - "--log=true"
       - "--log.level=debug"
-      
       - "--api.insecure=true"
       - "--api.dashboard=true"
-      
       - "--providers.docker"
+      # - "--providers.docker.endpoint=${DOCKER_ENBPOINT}"
       - "--providers.docker.endpoint=tcp://socket:2375"
-      - "--providers.docker.network=proxy_traefik"
+      - "--providers.docker.network=${COMPOSE_PROJECT_NAME}_traefik"
       - "--providers.docker.exposedByDefault=false"
       - "--providers.docker.watch=true"
-
         # used during the challenge
       - "--certificatesResolvers.leresolver.acme.dnschallenge=true"
       - "--certificatesresolvers.leresolver.acme.dnschallenge.provider=${LE_PROVIDER}"
-
         # define the SSL certificate authorities
       - "--certificatesResolvers.leresolver.acme.email=${LE_EMAIL}"
       - "--certificatesResolvers.leresolver.acme.storage=/letsencrypt/acme.json"
-
       - "--entrypoints.web.address=:80"
       - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
       - "--entrypoints.web.http.redirections.entrypoint.scheme=https"      
       - "--entrypoints.websecure.address=:443"  
-      
       - "--serversTransport.insecureSkipVerify=true"
     env_file:
       - .env
     volumes:
       - letsencrypt:/letsencrypt
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     ports:
       - "80:80"
       - "443:443"
@@ -73,23 +69,21 @@ services:
     command: server /data
     env_file:
       - .env.minio      
-    stop_grace_period: 1m30s   
+    stop_grace_period: 1m30s 
     networks:
       - applications
       - traefik
-
+    volumes:
+      - minio:/data
     labels:
       - "traefik.enable=true"
-      
       # Set middlewares  
       - "traefik.http.middlewares.minio.compress=true"
       - "traefik.http.routers.minio.middlewares=minio@docker"
-
       # Set https
       - "traefik.http.routers.minio.tls=true"
       - "traefik.http.routers.minio.entrypoints=websecure"
       - "traefik.http.routers.minio.rule=Host(`minio.${LE_DOMAIN}`)"
-
       - "traefik.http.services.minio.loadbalancer.server.port=9000"
   
 networks:
@@ -98,3 +92,4 @@ networks:
 
 volumes:
   letsencrypt:
+  minio:
