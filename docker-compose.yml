@@ -6,12 +6,12 @@ services:
     image: ghcr.io/zaherg/docker-socket-proxy:latest
     environment:
       # required permissions
-      VOLUMES: 1
+      VOLUMES: 0
       NETWORKS: 1
       CONTAINERS: 1
       TASKS: 1
-      POST: 1
-      DELETE: 1
+      POST: 0
+      DELETE: 0
       LOG_LEVEL: debug
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock:ro'
