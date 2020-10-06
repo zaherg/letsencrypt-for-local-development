@@ -1,5 +1,7 @@
 # Docker Compose + Traefik TLS Proxy + Let's encrypt Wildcard Cert
 
+> This is an example is mainly for solo developers. But it is easy to study and change to fit into your shoes.
+
 This is an example of a solution I've used in various forms for months for local development. It's easy, flexable, and gives a near magical solution for always running HTTP apps through docker-compose with valid TLS, all on a single port with host-header SNI routing via Traefik proxy.
 
 ## Why would you want this?
